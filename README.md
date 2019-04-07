@@ -7,5 +7,3 @@ Usage:
 ```
 preyaml gen -t sample_template.yaml -d secrets.env -o sample.yaml
 ```
-
-See the correspond
