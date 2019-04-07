@@ -1,0 +1,3 @@
+env_variables:
+  TOKEN_1: {{index .Vars "TOKEN_1"}}
+  TOKEN_2: {{index .Vars "TOKEN_2"}}
