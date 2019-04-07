@@ -13,9 +13,9 @@ type templateConfig struct {
 	Vars map[string]string
 }
 
-func Generate(templateFile string, data string, output string) {
-	templateContents := readTemplate(templateFile)
-	templateConfig := readData(data)
+func Generate(templateFilename string, dataFilename string, outputFilename string) {
+	templateContents := readTemplate(templateFilename)
+	templateConfig := readData(dataFilename)
 
 	t, err := template.New("foo").Parse(templateContents)
 	if err != nil {
@@ -23,7 +23,7 @@ func Generate(templateFile string, data string, output string) {
 		os.Exit(1)
 	}
 
-	f, err := os.Create(output)
+	f, err := os.Create(outputFilename)
 	if err != nil {
 		fmt.Println("Can not create output file ", err)
 		os.Exit(1)
@@ -38,8 +38,8 @@ func Generate(templateFile string, data string, output string) {
 	w.Flush()
 }
 
-func readTemplate(template string) string {
-	templateContents, err := ioutil.ReadFile(template)
+func readTemplate(templateFilename string) string {
+	templateContents, err := ioutil.ReadFile(templateFilename)
 	if err != nil {
 		fmt.Println("Cannot read template ", err)
 		os.Exit(1)
@@ -47,21 +47,19 @@ func readTemplate(template string) string {
 	return string(templateContents)
 }
 
-func readData(data string) *templateConfig {
+func readData(dataFilename string) *templateConfig {
 	variables := make(map[string]string)
-	f, err := os.Open(data)
+	f, err := os.Open(dataFilename)
 	if err != nil {
 		fmt.Print("Cannot open data file", err)
 		os.Exit(1)
 	}
-	scanner := bufio.NewScanner(f) // f is the *os.File
+	scanner := bufio.NewScanner(f)
 	for scanner.Scan() {
-		fmt.Println(scanner.Text()) // Println will add back the final '\n'
 		pairs := strings.Split(scanner.Text(), "=")
 		variables[pairs[0]] = pairs[1]
 	}
 	if err := scanner.Err(); err != nil {
-		// handle error
 		fmt.Println("Cannot read data file ", err)
 		os.Exit(1)
 	}
